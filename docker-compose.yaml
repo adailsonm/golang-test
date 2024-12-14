@@ -1,0 +1,44 @@
+services:
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    networks:
+      - nodeart_network
+    env_file:
+      - .env
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    ports:
+      - 8080:8080
+  database:
+    image: postgres:17.0-alpine3.20
+    container_name: nodeart
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: nodeart
+      POSTGRES_PASSWORD: nodeart
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: nodeart
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - nodeart_network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U nodeart -d nodeart'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  nodeart_network:
+    driver: bridge
