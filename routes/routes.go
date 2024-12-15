@@ -13,6 +13,7 @@ func Initialize(app *fiber.App, database *gorm.DB) {
 	UserHandler := Handler.NewUserHandler(database)
 	AuthHandler := Handler.NewAuthHandler(database)
 	WalletHandler := Handler.NewWalletHandler(database)
+	GameHandler := Handler.NewGameHandler(database)
 
 	api := app.Group("/api")
 
@@ -24,4 +25,6 @@ func Initialize(app *fiber.App, database *gorm.DB) {
 	api.Get("/profile", UserHandler.GetUser)
 	api.Post("/wallet/deposit", WalletHandler.Deposit)
 	api.Post("/wallet/withdraw", WalletHandler.Withdraw)
+
+	api.Post("/slot/spin", GameHandler.Spin)
 }

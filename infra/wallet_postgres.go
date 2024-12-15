@@ -45,3 +45,7 @@ func (w WalletRepository) FetchWalletByUserId(userId string) ([]Models.Wallet, e
 		Find(&results).Error
 	return results, err
 }
+
+func (w WalletRepository) CreateTransaction(request *Models.Wallet) error {
+	return w.db.Create(request).Error
+}

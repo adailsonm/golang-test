@@ -82,3 +82,30 @@ func (w WalletUseCase) Withdraw(identity string, request *Models.Wallet) error {
 	}
 	return nil
 }
+
+func (w WalletUseCase) CreateTransaction(identity string, request *Models.Wallet) error {
+	tx, txErr := w.IWalletRepository.TxStart()
+	if txErr != nil {
+		return txErr
+	}
+
+	walletUpdate := &Models.Wallet{
+		WalletTable: Models.WalletTable{
+			Amount:      request.Amount,
+			Transaction: "Game",
+			UserId:      string(identity),
+			Times:       Common.Times{CreatedAt: time.Now(), UpdatedAt: time.Now()},
+		},
+	}
+
+	if err := w.IWalletRepository.CreateTransaction(walletUpdate); err != nil {
+		w.IWalletRepository.TxRollback(tx)
+		return err
+	}
+
+	if err := w.IWalletRepository.TxCommit(tx); err != nil {
+		w.IWalletRepository.TxRollback(tx)
+		return err
+	}
+	return nil
+}

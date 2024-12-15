@@ -34,6 +34,7 @@ func main() {
 
 	db.AutoMigrate(&Models.User{})
 	db.AutoMigrate(&Models.Wallet{})
+	db.AutoMigrate(&Models.Game{})
 	serverPort := os.Getenv("SERVER_PORT")
 	log.Fatal(app.Listen(":" + serverPort))
 }
