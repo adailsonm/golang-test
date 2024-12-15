@@ -5,7 +5,11 @@ import (
 )
 
 type User struct {
-	Balance float64 `json:"balance"`
+	Balance float64 `json:"balance,omitempty"`
+	UserTable
+}
+
+type UserWithoutBalance struct {
 	UserTable
 }
 

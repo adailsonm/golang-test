@@ -13,8 +13,9 @@ type GameTable struct {
 	BetAmount float64 `json:"bet_amount" gorm:"bet_amount"`
 	Result    string  `json:"result" gorm:"result"`
 	Payout    float64 `json:"payout" gorm:"payout"`
-	UserId    string
-	User      User
+	Status    string  `json:"status" gorm:"status"`
+	UserId    string  `gorm:"column:user_id"`
+	User      User    `json:"user" gorm:"foreignKey:UserId;references:ID"`
 	Common.Times
 }
 
@@ -26,9 +27,11 @@ type BetResult struct {
 }
 type IGameUseCase interface {
 	Spin(identity string, request *Game) (*BetResult, error)
+	GetHistory(identity string) ([]Game, error)
 }
 
 type IGameRepository interface {
 	Common.Repository
 	CreateBet(request *Game) error
+	FindHistorical(identity string) ([]Game, error)
 }

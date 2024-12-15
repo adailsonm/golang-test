@@ -32,3 +32,12 @@ func (g GameRepository) TxRollback(tx *gorm.DB) {
 func (g GameRepository) CreateBet(request *Models.Game) error {
 	return g.db.Create(request).Error
 }
+
+func (g GameRepository) FindHistorical(identity string) ([]Models.Game, error) {
+	results := []Models.Game{}
+	err := g.db.Preload("User").
+		Table("games").
+		Where("user_id = ?", identity).
+		Find(&results).Error
+	return results, err
+}

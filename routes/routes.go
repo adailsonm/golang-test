@@ -27,4 +27,6 @@ func Initialize(app *fiber.App, database *gorm.DB) {
 	api.Post("/wallet/withdraw", WalletHandler.Withdraw)
 
 	api.Post("/slot/spin", GameHandler.Spin)
+	api.Get("/slot/history", GameHandler.GetHistory)
+
 }

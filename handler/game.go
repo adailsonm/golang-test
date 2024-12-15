@@ -49,3 +49,24 @@ func (g GameHandler) Spin(c *fiber.Ctx) error {
 		"data":   betResult,
 	})
 }
+
+func (g GameHandler) GetHistory(c *fiber.Ctx) error {
+	userJwt := c.Locals("user").(*jwt.Token)
+	claims := userJwt.Claims.(jwt.MapClaims)
+	identity, _ := uuid.Parse(claims["id"].(string))
+	gameHistory, err := g.IGameUseCase.GetHistory(identity.String())
+	if err != nil {
+		data := map[string]interface{}{
+			"error": err.Error(),
+		}
+		return c.Status(fiber.ErrInternalServerError.Code).JSON(fiber.Map{
+			"status":  "error",
+			"message": data,
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"status": "success",
+		"data":   gameHistory,
+	})
+}

@@ -39,12 +39,18 @@ func (g GameUseCase) Spin(identity string, request *Models.Game) (*Models.BetRes
 	}
 
 	result, payout := spinSlotMachine(request.BetAmount)
-
+	var status string
+	if payout > 0 {
+		status = "win"
+	} else {
+		status = "lose"
+	}
 	game := &Models.Game{
 		GameTable: Models.GameTable{
 			BetAmount: request.BetAmount,
 			Result:    fmt.Sprintf("%d %d %d", result[0], result[1], result[2]),
 			Payout:    payout,
+			Status:    status,
 			UserId:    string(identity),
 			Times:     Common.Times{CreatedAt: time.Now(), UpdatedAt: time.Now()},
 		},
@@ -90,14 +96,9 @@ func (g GameUseCase) Spin(identity string, request *Models.Game) (*Models.BetRes
 		return nil, err
 	}
 	return &Models.BetResult{
-		Result: fmt.Sprintf("%d %d %d", result[0], result[1], result[2]),
-		Payout: payout,
-		Status: func() string {
-			if payout > 0 {
-				return "win"
-			}
-			return "lose"
-		}(),
+		Result:  fmt.Sprintf("%d %d %d", result[0], result[1], result[2]),
+		Payout:  payout,
+		Status:  status,
 		Balance: user.Balance,
 	}, nil
 }
@@ -122,4 +123,13 @@ func calculatePayout(result [3]int, bet float64) float64 {
 		return bet * 2
 	}
 	return 0
+}
+
+func (g GameUseCase) GetHistory(identity string) ([]Models.Game, error) {
+	gameHistory, err := g.IGameRepository.FindHistorical(identity)
+	if err != nil {
+		return []Models.Game{}, err
+	}
+
+	return gameHistory, nil
 }
