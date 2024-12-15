@@ -22,6 +22,16 @@ func NewWalletHandler(db *gorm.DB) *WalletHandler {
 	}
 }
 
+// Deposit godoc
+// @Summary Deposit money into wallet
+// @Description Deposit a specified amount into the wallet
+// @Tags Wallet
+// @Accept json
+// @Produce json
+// @Param amount body float64 true "Deposit Amount"
+// @Security BearerAuth
+// @Success 200 {string} string "Deposit successful"
+// @Router /wallet/deposit [post]
 func (w WalletHandler) Deposit(c *fiber.Ctx) error {
 	userJwt := c.Locals("user").(*jwt.Token)
 	claims := userJwt.Claims.(jwt.MapClaims)
@@ -51,6 +61,16 @@ func (w WalletHandler) Deposit(c *fiber.Ctx) error {
 	})
 }
 
+// Withdraw godoc
+// @Summary Withdraw money from wallet
+// @Description Withdraw a specified amount from the wallet
+// @Tags Wallet
+// @Accept json
+// @Produce json
+// @Param amount body float64 true "Withdraw Amount"
+// @Security BearerAuth
+// @Success 200 {string} string "Withdraw successful"
+// @Router /wallet/withdraw [post]
 func (w WalletHandler) Withdraw(c *fiber.Ctx) error {
 	userJwt := c.Locals("user").(*jwt.Token)
 	claims := userJwt.Claims.(jwt.MapClaims)

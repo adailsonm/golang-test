@@ -1,0 +1,192 @@
+basePath: /
+host: localhost:8080
+info:
+  contact:
+    email: adailson.moreira16@gmail.com
+    name: Adailson Moreira
+  description: Created by Adailson
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: NodeArt - Golang
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login with email and password
+      parameters:
+      - description: Email
+        in: body
+        name: email
+        required: true
+        schema:
+          type: string
+      - description: Password
+        in: body
+        name: password
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login successful
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Login to the platform
+      tags:
+      - Auth
+  /profile:
+    get:
+      consumes:
+      - application/json
+      description: Get the details of the logged-in user's profile
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User profile
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get user profile
+      tags:
+      - User
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with their details
+      parameters:
+      - description: First Name
+        in: body
+        name: first_name
+        required: true
+        schema:
+          type: string
+      - description: Last Name
+        in: body
+        name: last_name
+        required: true
+        schema:
+          type: string
+      - description: Email
+        in: body
+        name: email
+        required: true
+        schema:
+          type: string
+      - description: Password
+        in: body
+        name: password
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Registration successful
+          schema:
+            type: string
+      summary: Register a new user
+      tags:
+      - Auth
+  /slot/history:
+    get:
+      consumes:
+      - application/json
+      description: Get the history of previous game spins
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: History of spins
+          schema:
+            items:
+              type: string
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get game history
+      tags:
+      - Game
+  /slot/spin:
+    post:
+      consumes:
+      - application/json
+      description: Make a bet on the slot machine
+      parameters:
+      - description: Bet Amount
+        in: body
+        name: bet_amount
+        required: true
+        schema:
+          type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Spin result
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Spin a slot machine
+      tags:
+      - Game
+  /wallet/deposit:
+    post:
+      consumes:
+      - application/json
+      description: Deposit a specified amount into the wallet
+      parameters:
+      - description: Deposit Amount
+        in: body
+        name: amount
+        required: true
+        schema:
+          type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deposit successful
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Deposit money into wallet
+      tags:
+      - Wallet
+  /wallet/withdraw:
+    post:
+      consumes:
+      - application/json
+      description: Withdraw a specified amount from the wallet
+      parameters:
+      - description: Withdraw Amount
+        in: body
+        name: amount
+        required: true
+        schema:
+          type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Withdraw successful
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Withdraw money from wallet
+      tags:
+      - Wallet
+swagger: "2.0"

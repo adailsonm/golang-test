@@ -21,6 +21,16 @@ func NewGameHandler(db *gorm.DB) *GameHandler {
 	}
 }
 
+// Spin godoc
+// @Summary Spin a slot machine
+// @Description Make a bet on the slot machine
+// @Tags Game
+// @Accept json
+// @Produce json
+// @Param bet_amount body float64 true "Bet Amount"
+// @Security BearerAuth
+// @Success 200 {string} string "Spin result"
+// @Router /slot/spin [post]
 func (g GameHandler) Spin(c *fiber.Ctx) error {
 	userJwt := c.Locals("user").(*jwt.Token)
 	claims := userJwt.Claims.(jwt.MapClaims)
@@ -50,6 +60,15 @@ func (g GameHandler) Spin(c *fiber.Ctx) error {
 	})
 }
 
+// History godoc
+// @Summary Get game history
+// @Description Get the history of previous game spins
+// @Tags Game
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {array} string "History of spins"
+// @Router /slot/history [get]
 func (g GameHandler) GetHistory(c *fiber.Ctx) error {
 	userJwt := c.Locals("user").(*jwt.Token)
 	claims := userJwt.Claims.(jwt.MapClaims)

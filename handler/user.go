@@ -22,6 +22,15 @@ func NewUserHandler(db *gorm.DB) *UserHandler {
 	}
 }
 
+// Profile godoc
+// @Summary Get user profile
+// @Description Get the details of the logged-in user's profile
+// @Tags User
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {string} string "User profile"
+// @Router /profile [get]
 func (u UserHandler) GetUser(c *fiber.Ctx) error {
 	userJwt := c.Locals("user").(*jwt.Token)
 	claims := userJwt.Claims.(jwt.MapClaims)
@@ -44,6 +53,18 @@ func (u UserHandler) GetUser(c *fiber.Ctx) error {
 	})
 }
 
+// Register godoc
+// @Summary Register a new user
+// @Description Register a new user with their details
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param first_name body string true "First Name"
+// @Param last_name body string true "Last Name"
+// @Param email body string true "Email"
+// @Param password body string true "Password"
+// @Success 200 {string} string "Registration successful"
+// @Router /register [post]
 func (u UserHandler) CreateUser(c *fiber.Ctx) error {
 	request := &Models.User{}
 	if err := c.BodyParser(request); err != nil {

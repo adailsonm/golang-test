@@ -20,6 +20,16 @@ func NewAuthHandler(db *gorm.DB) *AuthHandler {
 	}
 }
 
+// Login godoc
+// @Summary Login to the platform
+// @Description Login with email and password
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param email body string true "Email"
+// @Param password body string true "Password"
+// @Success 200 {object} map[string]interface{} "Login successful"
+// @Router /login [post]
 func (a AuthHandler) Login(c *fiber.Ctx) error {
 	request := &Models.Auth{}
 	if err := c.BodyParser(request); err != nil {
