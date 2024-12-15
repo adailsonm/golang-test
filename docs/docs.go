@@ -38,21 +38,12 @@ const docTemplate = `{
                 "summary": "Login to the platform",
                 "parameters": [
                     {
-                        "description": "Email",
-                        "name": "email",
+                        "description": "user email",
+                        "name": "credentials",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Password",
-                        "name": "password",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/Handler.LoginRequest"
                         }
                     }
                 ],
@@ -110,39 +101,12 @@ const docTemplate = `{
                 "summary": "Register a new user",
                 "parameters": [
                     {
-                        "description": "First Name",
-                        "name": "first_name",
+                        "description": "Data Form User",
+                        "name": "data",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Last Name",
-                        "name": "last_name",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Email",
-                        "name": "email",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Password",
-                        "name": "password",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/Models.User"
                         }
                     }
                 ],
@@ -207,12 +171,12 @@ const docTemplate = `{
                 "summary": "Spin a slot machine",
                 "parameters": [
                     {
-                        "description": "Bet Amount",
-                        "name": "bet_amount",
+                        "description": "Spint Reques",
+                        "name": "spinGame",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "number"
+                            "$ref": "#/definitions/Handler.SpinRequest"
                         }
                     }
                 ],
@@ -246,12 +210,12 @@ const docTemplate = `{
                 "summary": "Deposit money into wallet",
                 "parameters": [
                     {
-                        "description": "Deposit Amount",
-                        "name": "amount",
+                        "description": "Wallet Data",
+                        "name": "wallet",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "number"
+                            "$ref": "#/definitions/Models.Wallet"
                         }
                     }
                 ],
@@ -285,12 +249,12 @@ const docTemplate = `{
                 "summary": "Withdraw money from wallet",
                 "parameters": [
                     {
-                        "description": "Withdraw Amount",
-                        "name": "amount",
+                        "description": "Wallet Data",
+                        "name": "wallet",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "number"
+                            "$ref": "#/definitions/Models.Wallet"
                         }
                     }
                 ],
@@ -301,6 +265,79 @@ const docTemplate = `{
                             "type": "string"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Handler.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "Handler.SpinRequest": {
+            "type": "object",
+            "properties": {
+                "bet_amount": {
+                    "type": "number"
+                }
+            }
+        },
+        "Models.User": {
+            "type": "object",
+            "properties": {
+                "balance": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "Models.Wallet": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "transaction": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/Models.User"
+                },
+                "userId": {
+                    "type": "string"
                 }
             }
         }

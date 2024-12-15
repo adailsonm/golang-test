@@ -1,4 +1,51 @@
 basePath: /
+definitions:
+  Handler.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  Handler.SpinRequest:
+    properties:
+      bet_amount:
+        type: number
+    type: object
+  Models.User:
+    properties:
+      balance:
+        type: number
+      created_at:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  Models.Wallet:
+    properties:
+      amount:
+        type: number
+      created_at:
+        type: string
+      id:
+        type: string
+      transaction:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/Models.User'
+      userId:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -18,18 +65,12 @@ paths:
       - application/json
       description: Login with email and password
       parameters:
-      - description: Email
+      - description: user email
         in: body
-        name: email
+        name: credentials
         required: true
         schema:
-          type: string
-      - description: Password
-        in: body
-        name: password
-        required: true
-        schema:
-          type: string
+          $ref: '#/definitions/Handler.LoginRequest'
       produces:
       - application/json
       responses:
@@ -64,30 +105,12 @@ paths:
       - application/json
       description: Register a new user with their details
       parameters:
-      - description: First Name
+      - description: Data Form User
         in: body
-        name: first_name
+        name: data
         required: true
         schema:
-          type: string
-      - description: Last Name
-        in: body
-        name: last_name
-        required: true
-        schema:
-          type: string
-      - description: Email
-        in: body
-        name: email
-        required: true
-        schema:
-          type: string
-      - description: Password
-        in: body
-        name: password
-        required: true
-        schema:
-          type: string
+          $ref: '#/definitions/Models.User'
       produces:
       - application/json
       responses:
@@ -123,12 +146,12 @@ paths:
       - application/json
       description: Make a bet on the slot machine
       parameters:
-      - description: Bet Amount
+      - description: Spint Reques
         in: body
-        name: bet_amount
+        name: spinGame
         required: true
         schema:
-          type: number
+          $ref: '#/definitions/Handler.SpinRequest'
       produces:
       - application/json
       responses:
@@ -147,12 +170,12 @@ paths:
       - application/json
       description: Deposit a specified amount into the wallet
       parameters:
-      - description: Deposit Amount
+      - description: Wallet Data
         in: body
-        name: amount
+        name: wallet
         required: true
         schema:
-          type: number
+          $ref: '#/definitions/Models.Wallet'
       produces:
       - application/json
       responses:
@@ -171,12 +194,12 @@ paths:
       - application/json
       description: Withdraw a specified amount from the wallet
       parameters:
-      - description: Withdraw Amount
+      - description: Wallet Data
         in: body
-        name: amount
+        name: wallet
         required: true
         schema:
-          type: number
+          $ref: '#/definitions/Models.Wallet'
       produces:
       - application/json
       responses:

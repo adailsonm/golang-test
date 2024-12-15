@@ -59,10 +59,7 @@ func (u UserHandler) GetUser(c *fiber.Ctx) error {
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param first_name body string true "First Name"
-// @Param last_name body string true "Last Name"
-// @Param email body string true "Email"
-// @Param password body string true "Password"
+// @Param data body Models.User true "Data Form User"
 // @Success 200 {string} string "Registration successful"
 // @Router /register [post]
 func (u UserHandler) CreateUser(c *fiber.Ctx) error {

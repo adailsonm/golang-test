@@ -14,6 +14,11 @@ type AuthHandler struct {
 	IAuthUseCase Models.IAuthUseCase
 }
 
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func NewAuthHandler(db *gorm.DB) *AuthHandler {
 	return &AuthHandler{
 		IAuthUseCase: Usecase.NewAuthUseCase(db),
@@ -26,8 +31,7 @@ func NewAuthHandler(db *gorm.DB) *AuthHandler {
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param email body string true "Email"
-// @Param password body string true "Password"
+// @Param   credentials  body LoginRequest true "user email"
 // @Success 200 {object} map[string]interface{} "Login successful"
 // @Router /login [post]
 func (a AuthHandler) Login(c *fiber.Ctx) error {

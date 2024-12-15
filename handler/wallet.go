@@ -28,7 +28,7 @@ func NewWalletHandler(db *gorm.DB) *WalletHandler {
 // @Tags Wallet
 // @Accept json
 // @Produce json
-// @Param amount body float64 true "Deposit Amount"
+// @Param wallet body Models.Wallet true "Wallet Data"
 // @Security BearerAuth
 // @Success 200 {string} string "Deposit successful"
 // @Router /wallet/deposit [post]
@@ -67,7 +67,7 @@ func (w WalletHandler) Deposit(c *fiber.Ctx) error {
 // @Tags Wallet
 // @Accept json
 // @Produce json
-// @Param amount body float64 true "Withdraw Amount"
+// @Param wallet body Models.Wallet true "Wallet Data"
 // @Security BearerAuth
 // @Success 200 {string} string "Withdraw successful"
 // @Router /wallet/withdraw [post]

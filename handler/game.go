@@ -15,6 +15,10 @@ type GameHandler struct {
 	IGameUseCase Models.IGameUseCase
 }
 
+type SpinRequest struct {
+	BetAmount float64 `json:"bet_amount"`
+}
+
 func NewGameHandler(db *gorm.DB) *GameHandler {
 	return &GameHandler{
 		IGameUseCase: Usecase.NewGameUseCase(db),
@@ -27,7 +31,7 @@ func NewGameHandler(db *gorm.DB) *GameHandler {
 // @Tags Game
 // @Accept json
 // @Produce json
-// @Param bet_amount body float64 true "Bet Amount"
+// @Param spinGame body SpinRequest true "Spint Reques"
 // @Security BearerAuth
 // @Success 200 {string} string "Spin result"
 // @Router /slot/spin [post]
