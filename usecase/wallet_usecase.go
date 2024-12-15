@@ -21,11 +21,15 @@ func NewWalletUseCase(db *gorm.DB) *WalletUseCase {
 	}
 }
 
-func (w WalletUseCase) Deposit(identity string, request *Models.Wallet) error {
-	user, err := w.IUserRepository.FetchUserById(identity)
+func (w WalletUseCase) GetWallet(identity string) ([]Models.Wallet, error) {
+	wallets, err := w.IWalletRepository.FetchWalletByUserId(identity)
 	if err != nil {
-		return err
+		return []Models.Wallet{}, err
 	}
+	return wallets, nil
+}
+
+func (w WalletUseCase) Deposit(identity string, request *Models.Wallet) error {
 	tx, txErr := w.IWalletRepository.TxStart()
 	if txErr != nil {
 		return txErr
@@ -36,7 +40,6 @@ func (w WalletUseCase) Deposit(identity string, request *Models.Wallet) error {
 			Amount:      request.Amount,
 			UserId:      string(identity),
 			Transaction: "Deposit",
-			User:        user,
 			Times:       Common.Times{CreatedAt: time.Now(), UpdatedAt: time.Now()},
 		},
 	}
@@ -54,10 +57,6 @@ func (w WalletUseCase) Deposit(identity string, request *Models.Wallet) error {
 }
 
 func (w WalletUseCase) Withdraw(identity string, request *Models.Wallet) error {
-	user, err := w.IUserRepository.FetchUserById(identity)
-	if err != nil {
-		return err
-	}
 	tx, txErr := w.IWalletRepository.TxStart()
 	if txErr != nil {
 		return txErr
@@ -65,10 +64,9 @@ func (w WalletUseCase) Withdraw(identity string, request *Models.Wallet) error {
 
 	walletUpdate := &Models.Wallet{
 		WalletTable: Models.WalletTable{
-			Amount:      request.Amount,
+			Amount:      -request.Amount,
 			Transaction: "Withdraw",
-			UserId:      user.ID.String(),
-			User:        user,
+			UserId:      string(identity),
 			Times:       Common.Times{CreatedAt: time.Now(), UpdatedAt: time.Now()},
 		},
 	}

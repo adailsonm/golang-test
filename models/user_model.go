@@ -5,6 +5,7 @@ import (
 )
 
 type User struct {
+	Balance float64 `json:"balance"`
 	UserTable
 }
 
@@ -13,7 +14,7 @@ type UserTable struct {
 	FirstName string `json:"first_name" gorm:"first_name"`
 	LastName  string `json:"last_name" gorm:"last_name"`
 	Password  string `json:"-" gorm:"password"`
-	Email     string `json:"email" gorm:"email"`
+	Email     string `json:"email" gorm:"email,unique"`
 	Common.Times
 }
 type SingleUserInput struct {

@@ -36,3 +36,12 @@ func (w WalletRepository) Deposit(request *Models.Wallet) error {
 func (w WalletRepository) Withdraw(request *Models.Wallet) error {
 	return w.db.Create(request).Error
 }
+
+func (w WalletRepository) FetchWalletByUserId(userId string) ([]Models.Wallet, error) {
+	results := []Models.Wallet{}
+	err := w.db.
+		Table("wallets").
+		Where("user_id = ?", userId).
+		Find(&results).Error
+	return results, err
+}

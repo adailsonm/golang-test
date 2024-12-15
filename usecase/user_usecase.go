@@ -14,19 +14,28 @@ import (
 
 type UserUseCase struct {
 	IUserRepository Models.IUserRepository
+	IWalletUseCase  Models.IWalletUseCase
 }
 
 func NewUserUseCase(db *gorm.DB) *UserUseCase {
 	return &UserUseCase{
 		IUserRepository: Infra.NewIUserRepository(db),
+		IWalletUseCase:  NewWalletUseCase(db),
 	}
 }
 
 func (u UserUseCase) GetUser(request *Models.SingleUserInput) (Models.User, error) {
 	user, err := u.IUserRepository.FetchUserById(request.ID)
+	transactions, _ := u.IWalletUseCase.GetWallet(user.ID.String())
 	if err != nil {
 		return user, err
 	}
+	var balance float64
+	for _, transaction := range transactions {
+		balance += transaction.Amount
+	}
+
+	user.Balance = balance
 	return user, nil
 }
 
