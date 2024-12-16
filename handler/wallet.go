@@ -44,7 +44,7 @@ func (w WalletHandler) Deposit(c *fiber.Ctx) error {
 			"message": fiber.ErrBadRequest.Message,
 		})
 	}
-	err := w.IWalletUseCase.Deposit(identity.String(), request)
+	balance, err := w.IWalletUseCase.Deposit(identity.String(), request)
 	if err != nil {
 		data := map[string]interface{}{
 			"error": err.Error(),
@@ -57,7 +57,7 @@ func (w WalletHandler) Deposit(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"status": "success",
-		"data":   "Deposit with Successfully!",
+		"data":   balance,
 	})
 }
 
@@ -84,7 +84,7 @@ func (w WalletHandler) Withdraw(c *fiber.Ctx) error {
 			"message": fiber.ErrBadRequest.Message,
 		})
 	}
-	err := w.IWalletUseCase.Withdraw(identity.String(), request)
+	balance, err := w.IWalletUseCase.Withdraw(identity.String(), request)
 	if err != nil {
 		data := map[string]interface{}{
 			"error": err.Error(),
@@ -97,6 +97,6 @@ func (w WalletHandler) Withdraw(c *fiber.Ctx) error {
 
 	return c.Status(http.StatusOK).JSON(fiber.Map{
 		"status":  "success",
-		"message": "Withdraw with Successfully!",
+		"message": balance,
 	})
 }

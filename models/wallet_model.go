@@ -2,6 +2,8 @@ package Models
 
 import (
 	Common "golang-test/models/common"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type Wallet struct {
@@ -18,8 +20,8 @@ type WalletTable struct {
 }
 
 type IWalletUseCase interface {
-	Deposit(identity string, request *Wallet) error
-	Withdraw(identity string, request *Wallet) error
+	Deposit(identity string, request *Wallet) (fiber.Map, error)
+	Withdraw(identity string, request *Wallet) (fiber.Map, error)
 	CreateTransaction(identity string, request *Wallet) error
 	GetWallet(identity string) ([]Wallet, error)
 }

@@ -1,11 +1,13 @@
 package Usecase
 
 import (
+	"fmt"
 	Infra "golang-test/infra"
 	Models "golang-test/models"
 	Common "golang-test/models/common"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
@@ -29,10 +31,20 @@ func (w WalletUseCase) GetWallet(identity string) ([]Models.Wallet, error) {
 	return wallets, nil
 }
 
-func (w WalletUseCase) Deposit(identity string, request *Models.Wallet) error {
+func (w WalletUseCase) Deposit(identity string, request *Models.Wallet) (fiber.Map, error) {
+	transactions, err := w.GetWallet(identity)
+	if err != nil {
+		return nil, err
+	}
+
+	var balance float64
+	for _, transaction := range transactions {
+		balance += transaction.Amount
+	}
+
 	tx, txErr := w.IWalletRepository.TxStart()
 	if txErr != nil {
-		return txErr
+		return nil, txErr
 	}
 
 	wallet := &Models.Wallet{
@@ -46,20 +58,36 @@ func (w WalletUseCase) Deposit(identity string, request *Models.Wallet) error {
 
 	if err := w.IWalletRepository.Deposit(wallet); err != nil {
 		w.IWalletRepository.TxRollback(tx)
-		return err
+		return nil, err
 	}
 
 	if err := w.IWalletRepository.TxCommit(tx); err != nil {
 		w.IWalletRepository.TxRollback(tx)
-		return err
+		return nil, err
 	}
-	return nil
+	return fiber.Map{
+		"balance": balance,
+	}, nil
 }
 
-func (w WalletUseCase) Withdraw(identity string, request *Models.Wallet) error {
+func (w WalletUseCase) Withdraw(identity string, request *Models.Wallet) (fiber.Map, error) {
+	transactions, err := w.GetWallet(identity)
+	if err != nil {
+		return nil, err
+	}
+
+	var balance float64
+	for _, transaction := range transactions {
+		balance += transaction.Amount
+	}
+
+	if balance < request.Amount {
+		return nil, fmt.Errorf("insufficient balance: current balance is %.2f, requested amount is %.2f", balance, request.Amount)
+	}
+
 	tx, txErr := w.IWalletRepository.TxStart()
 	if txErr != nil {
-		return txErr
+		return nil, txErr
 	}
 
 	walletUpdate := &Models.Wallet{
@@ -73,14 +101,16 @@ func (w WalletUseCase) Withdraw(identity string, request *Models.Wallet) error {
 
 	if err := w.IWalletRepository.Withdraw(walletUpdate); err != nil {
 		w.IWalletRepository.TxRollback(tx)
-		return err
+		return nil, err
 	}
 
 	if err := w.IWalletRepository.TxCommit(tx); err != nil {
 		w.IWalletRepository.TxRollback(tx)
-		return err
+		return nil, err
 	}
-	return nil
+	return fiber.Map{
+		"balance": balance,
+	}, nil
 }
 
 func (w WalletUseCase) CreateTransaction(identity string, request *Models.Wallet) error {
